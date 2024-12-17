@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>升級材料查詢工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        input {
+            margin: 10px 0;
+            padding: 5px;
+            width: 100%;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>升級材料查詢工具</h1>
+        <label>起始等級：</label>
+        <input type="number" id="startLevel" min="1" max="10" placeholder="例如：2">
+
+        <label>目標等級：</label>
+        <input type="number" id="targetLevel" min="1" max="10" placeholder="例如：10">
+
+        <button onclick="calculateMaterials()">查詢所需材料</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // 範例材料數據：每個等級之間的升級材料數量
+        const upgradeMaterials = [
+            { level: 1, materials: { 木材: 10, 石頭: 5 } },
+            { level: 2, materials: { 木材: 20, 石頭: 10 } },
+            { level: 3, materials: { 木材: 30, 石頭: 15 } },
+            { level: 4, materials: { 木材: 40, 石頭: 20 } },
+            { level: 5, materials: { 木材: 50, 石頭: 25 } },
+            { level: 6, materials: { 木材: 60, 石頭: 30 } },
+            { level: 7, materials: { 木材: 70, 石頭: 35 } },
+            { level: 8, materials: { 木材: 80, 石頭: 40 } },
+            { level: 9, materials: { 木材: 90, 石頭: 45 } },
+            { level: 10, materials: { 木材: 100, 石頭: 50 } },
+        ];
+
+        function calculateMaterials() {
+            const startLevel = parseInt(document.getElementById("startLevel").value);
+            const targetLevel = parseInt(document.getElementById("targetLevel").value);
+            const resultDiv = document.getElementById("result");
+
+            // 驗證輸入
+            if (isNaN(startLevel) || isNaN(targetLevel) || startLevel >= targetLevel) {
+                resultDiv.innerHTML = "請輸入有效的起始等級和目標等級！";
+                return;
+            }
+
+            // 計算所需材料總和
+            let totalMaterials = {};
+            for (let i = startLevel; i < targetLevel; i++) {
+                const currentMaterials = upgradeMaterials[i - 1].materials;
+                for (let material in currentMaterials) {
+                    if (!totalMaterials[material]) {
+                        totalMaterials[material] = 0;
+                    }
+                    totalMaterials[material] += currentMaterials[material];
+                }
+            }
+
+            // 顯示結果
+            let resultHTML = "所需材料總計：<br>";
+            for (let material in totalMaterials) {
+                resultHTML += `${material}：${totalMaterials[material]}<br>`;
+            }
+            resultDiv.innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>
